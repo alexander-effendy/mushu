@@ -1,0 +1,25 @@
+# Node.js
+node_modules/
+.env
+dist/
+build/
+*.log
+npm-debug.log*
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+
+# Optional: logs and runtime files
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# Optional: dotenv backup
+.env.local
+.env.*.local

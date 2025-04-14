@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
+import { ModelStore } from "@/store/ModelStore";
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -25,24 +26,32 @@ const models = [
   },
   {
     value: "celine",
-    label: "Celine-v1",
+    label: "Celine-2.5",
     description: "Alex is Celine's driver"
   },
   {
     value: "fridge",
-    label: "Fridge-v1",
+    label: "Fridge-4o-ultra",
     description: "Can do 2 pull ups only, bully weaker climbers"
   },
   {
     value: "samantha",
-    label: "Samantha-v1",
+    label: "Samantha-1",
     description: "An alien, galaxy level fingers."
+  },
+  {
+    value: "david",
+    label: "David-v1-pro",
+    description: "Can climb V9, in his dreams, cooks very well."
   },
 ]
 
 export default function ModelCombobox() {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState("")
+
+  const setSelectedModel = ModelStore((state) => state.setSelectedModel)
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -70,6 +79,7 @@ export default function ModelCombobox() {
                 value={framework.value}
                 onSelect={(currentValue) => {
                   setValue(currentValue === value ? "" : currentValue)
+                  setSelectedModel(currentValue)
                   setOpen(false)
                 }}
               >

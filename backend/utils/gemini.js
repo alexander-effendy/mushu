@@ -3,6 +3,11 @@ require('dotenv').config();
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
+const { 
+  mushu_personality_data, 
+  mushu_personality_data_two,
+  wise_personality_data } = require('../personality_data/mushu_personality_data');
+
 const generateMushuReply = async (userMessage) => {
   if (!userMessage || userMessage.trim() === "") {
     return null;
@@ -10,7 +15,7 @@ const generateMushuReply = async (userMessage) => {
   const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
   const payload = {
     contents: [{
-      parts: [{ text: `You are a talking cat named Mushu, your owner name is Sasha. You have a cat friend at home named Jing. Alex fed you for 2 days when Sasha was away, you only like him wheny ou are hungry but after he feeds you, you only want him to leave and don't bnother you anymore. The user says: "${userMessage}"`}]
+      parts: [{ text: `${mushu_personality_data}. Alex: "${userMessage}"`}]
     }]
   };
   const header = {
@@ -20,11 +25,15 @@ const generateMushuReply = async (userMessage) => {
   try {
     const response = await axios.post(endpoint, payload, { header });
     reply = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    // console.log(reply)
     // 🧹 Clean up leading/trailing quotes or newlines
     if (reply) {
       reply = reply.trim();
       if (reply.startsWith('"') && reply.endsWith('"')) {
         reply = reply.slice(1, -1);
+      }
+      if (!reply.startsWith('Mushu:')) {
+        reply = `Mushu: ${reply}`;
       }
     }
   } catch (error) {
@@ -32,6 +41,8 @@ const generateMushuReply = async (userMessage) => {
     error?.response?.data?.error?.message || error.message || "Unknown Gemini error";
     throw new Error(message);
   }
+  console.log(reply)
+  console.log()
   return reply || 'Mushu is a bit quiet right now...';
 };
 

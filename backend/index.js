@@ -13,5 +13,7 @@ app.use(express.json());
 app.use('/', chatRoutes);
 
 app.listen(PORT, () => {
-  console.log(`🚀 Mushu backend is running on http://localhost:${PORT}`);
+  // console.log(`🚀 Mushu backend is running on http://localhost:${PORT}`);
+  console.log('Mushu is awake now....🐱');
+  console.log('Chat with Mushu:\n')
 });

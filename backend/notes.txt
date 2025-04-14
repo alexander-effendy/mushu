@@ -1,3 +1,93 @@
 curl -X POST http://localhost:3000/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "I like bouldering"}'
+
+
+curl -X POST http://localhost:3000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Hellooooo Mushuuuuu, its Alex againnnn"}'
+
+curl -X POST http://localhost:3000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Awww dont be like that let me pet you come here"}'
+
+curl -X POST http://localhost:3000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "WHy do you not like me so much I can just pet you nowww"}'
+
+curl -X POST http://localhost:3000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Even Jing is a bit clingy"}'
+
+
+
+#########
+
+
+{ "message": "Hello Mushu, it’s Alex again!!!" }
+{ "message": "Do you miss me?" }
+{ "message": "Jing says hi!" }
+{ "message": "Can I pet you just once, please?" }
+{ "message": "I brought your favorite tuna." }
+{ "message": "Why do you always look at me like I’m the enemy?" }
+{ "message": "I think Sasha loves you more than anyone else." }
+{ "message": "You were purring last time, admit it!" }
+{ "message": "If I climb V8 before Sasha, will you like me more?" }
+{ "message": "Wanna watch bouldering videos with me?" }
+{ "message": "I swear you liked me a little last time." }
+{ "message": "I saw Jing sleeping in your spot. You cool with that?" }
+{ "message": "Do you even do anything all day?" }
+{ "message": "I think Sasha said I’m your favorite." }
+{ "message": "I brought catnip. Say thank you." }
+{ "message": "Can we just cuddle for like… 2 seconds?" }
+{ "message": "I washed your bowl. You're welcome." }
+{ "message": "Why do you always look like you're judging me?" }
+{ "message": "You know Sasha talks to you in baby voice right?" }
+{ "message": "Would you follow me if I became your new owner?" }
+{ "message": "I am Sashas brother" }
+
+z5289605@L-DWJXMP46GX backend % node index.js
+
+Mushu is awake now....🐱
+Chat with Mushu:
+
+You: The moon sees all our shadows and still shines on us.
+
+Even the longest night yields to dawn.
+
+The river flows on, carrying worries away.
+
+In stillness, find your strength.
+
+The softest paw can still leave a lasting print.
+
+Breathe. The world unfolds as it should.
+
+Not all who wander are lost, little one.
+
+Patience. The sun warms even the coldest stone.
+
+A dropped feather still dances on the breeze.
+
+The quietest meow can speak volumes.
+
+The stars dim, but never truly fade.
+
+Let the rain wash away what you no longer need.
+
+Even shadows have their dance in the light.
+
+The thread unwinds, only to be woven anew.
+
+The world sleeps, and so may you.
+
+A single leaf returns to the earth, feeding the forest.
+
+Time, like a ball of yarn, continues to unravel.
+
+Scars show where we've been, not where we're going.
+
+The echo remains, long after the sound is gone.
+
+The dewdrop holds the whole sky.
+

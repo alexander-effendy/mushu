@@ -1,4 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+// import { useQuery } from "@tanstack/react-query";
+import { removeLeadingReply } from '@/utils/Parser';
+
 import { ModelStore } from "@/store/ModelStore";
 import { ChatStore } from "@/store/ChatStore";
 
@@ -7,22 +10,42 @@ import ModelCombobox from "@/components/ModelCombobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import { sendChatMessageAPI } from '@/api/ChatApi';
+
 import { SendHorizontal, Cat, GalleryVerticalEnd } from "lucide-react";
 
 const Chat = () => {
   const selectedModel = ModelStore((state) => state.selectedModel);
   const hasSentFirstMessage = ChatStore((state) => state.hasSentFirstMessage);
-  const setHasSentFirstMessage = ChatStore((state) => state.setHasSentFirstMessage)
+  const setHasSentFirstMessage = ChatStore((state) => state.setHasSentFirstMessage);
+
+  const chatHistory = ChatStore((state) => state.chatHistory);
+  const appendToChatHistory = ChatStore((state) => state.appendToChatHistory);
 
   const [input, setInput] = useState("");
+
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
   }, [selectedModel]);
 
-  const handleSend = () => {
+  useEffect(() => {
+    console.log('chathistory is now:');
+    console.log(chatHistory);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatHistory])
+
+  const handleSend = async () => {
     if (input.trim() === "") return;
     setHasSentFirstMessage(true);
+  
+    appendToChatHistory({ from: "user", text: input});
     setInput("");
+
+    const response = await sendChatMessageAPI(input);
+    const reply = removeLeadingReply(response);
+
+    appendToChatHistory({ from: "bot", text: reply});
   };
 
   return (
@@ -52,8 +75,40 @@ const Chat = () => {
       </div>
     )}
 
+    {/* CHAT HISTORY */}
+    {hasSentFirstMessage && (
+      <div 
+        // ref={messagesEndRef}
+        style={{ height: 'calc(100vh - 125px)' }} // adjust 250px if needed to match input + header height
+        className="soft-scrollbar-right px-4 py-4 w-full"
+      >
+        <div className="flex flex-col space-y-2 max-w-xl mx-auto">
+          {chatHistory.map((msg, idx) => (
+            <div
+              key={idx}
+              className={`text-sm px-4 py-2 rounded-lg break-words ${
+                msg.from === "user"
+                  ? "bg-muted text-muted-foreground self-end"
+                  : "bg-muteds text-muted-foreground self-start"
+              }`}
+            >
+              {msg.text}
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+    )}
+
+
+
     {/* Chat Input */}
     <div className="mt-10 max-w-2xl w-full mx-auto px-4 sm:px-6 lg:px-8">
+      {/* {isPending && (
+        <p className="text-sm text-muted-foreground italic mt-2 px-4">
+          Mushu is thinking...
+        </p>
+      )} */}
       <div className="relative">
         <Input
           type="text"

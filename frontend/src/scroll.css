@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+.soft-scrollbar-right > * {
+  direction: ltr;
+  text-align: left;
+}
+
+/*  scrollbar thin right side */
+.soft-scrollbar-right {
+  overflow-y: auto;
+}
+
+.soft-scrollbar-right::-webkit-scrollbar {
+  width: 6px;
+}
+
+.soft-scrollbar-right::-webkit-scrollbar-thumb {
+  background-color: rgba(56, 70, 96, 0.4);
+  border-radius: 30px;
+}
+
+.soft-scrollbar-right::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(49, 60, 77, 0.605);
+}
+
+.soft-scrollbar-right::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+.highlightable::selection {
+  color: yellow;
+}
+
+.highlightable::-moz-selection {
+  color: yellow;
+}

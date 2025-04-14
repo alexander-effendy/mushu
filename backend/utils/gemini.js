@@ -41,8 +41,8 @@ const generateMushuReply = async (userMessage) => {
     error?.response?.data?.error?.message || error.message || "Unknown Gemini error";
     throw new Error(message);
   }
-  console.log(reply)
-  console.log()
+  // console.log(reply)
+  // console.log()
   return reply || 'Mushu is a bit quiet right now...';
 };
 

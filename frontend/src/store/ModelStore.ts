@@ -6,6 +6,6 @@ type ModelState = {
 }
 
 export const ModelStore = create<ModelState>((set) => ({
-  selectedModel: "",
+  selectedModel: "mushu",
   setSelectedModel: (model) => set({ selectedModel: model }),
 }))

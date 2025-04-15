@@ -1,6 +1,7 @@
 import * as React from "react"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { ModelStore } from "@/store/ModelStore";
+import { ChatStore } from "@/store/ChatStore";
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -23,6 +24,11 @@ const models = [
     value: "mushu",
     label: "Mushu-v1-mini",
     description: "Sasha's orange cat, scared of Alex"
+  },
+  {
+    value: "papa",
+    label: "Papa-v1-mini",
+    description: "Papa is Alex's papa"
   },
   {
     value: "celine",
@@ -51,6 +57,8 @@ export default function ModelCombobox() {
   const [value, setValue] = React.useState("")
 
   const setSelectedModel = ModelStore((state) => state.setSelectedModel)
+  const setChatHistory = ChatStore((state) => state.setChatHistory)
+  const setHasSentFirstMessage = ChatStore((state) => state.setHasSentFirstMessage)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -63,7 +71,7 @@ export default function ModelCombobox() {
         >
           {value
             ? models.find((framework) => framework.value === value)?.label
-            : "Select model"}
+            : "Mushu-v1-mini"}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -78,6 +86,11 @@ export default function ModelCombobox() {
                 key={framework.value}
                 value={framework.value}
                 onSelect={(currentValue) => {
+                  if (currentValue !== value) {
+                    // clear chat
+                    setHasSentFirstMessage(false);
+                    setChatHistory([]);
+                  }
                   setValue(currentValue === value ? "" : currentValue)
                   setSelectedModel(currentValue)
                   setOpen(false)

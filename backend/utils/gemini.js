@@ -6,16 +6,48 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const { 
   mushu_personality_data, 
   mushu_personality_data_two,
-  wise_personality_data } = require('../personality_data/mushu_personality_data');
+  wise_personality_data,
+  papa_personality_data,
+  siao_po__personality_data,
+  fridge_personality_data,
+  samantha_personality_data } = require('../personality_data/mushu_personality_data');
 
-const generateMushuReply = async (userMessage) => {
+const generateMushuReply = async (userMessage, model) => {
   if (!userMessage || userMessage.trim() === "") {
     return null;
   }
+
+  // 🧠 Select the correct personality data
+  let personality;
+  switch (model) {
+    case 'mushu':
+      personality = mushu_personality_data;
+      break;
+    case 'papa':
+      console.log('papa is the best')
+      personality = papa_personality_data;
+      break;
+    case 'wise':
+      personality = wise_personality_data;
+      break;
+    case 'celine':
+      personality = siao_po__personality_data;
+      break;
+    case 'fridge':
+      personality = fridge_personality_data;
+      break;
+    case 'samantha':
+      personality = samantha_personality_data;
+      break;
+    default:
+      personality = 'You are a friendly chatbot. Keep replies short.';
+  }
+  console.log('model used: ' + model);
+
   const endpoint = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
   const payload = {
     contents: [{
-      parts: [{ text: `${mushu_personality_data}. Alex: "${userMessage}"`}]
+      parts: [{ text: `${personality}. Alex: "${userMessage}"`}]
     }]
   };
   const header = {
@@ -32,9 +64,10 @@ const generateMushuReply = async (userMessage) => {
       if (reply.startsWith('"') && reply.endsWith('"')) {
         reply = reply.slice(1, -1);
       }
-      if (!reply.startsWith('Mushu:')) {
-        reply = `Mushu: ${reply}`;
-      }
+      // if (!reply.startsWith('Mushu:')) {
+      //   reply = `Mushu: ${reply}`;
+      // }
+      reply.replace(/\b\w+:\s*/g, '')
     }
   } catch (error) {
     const message =

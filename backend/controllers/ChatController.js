@@ -4,6 +4,12 @@ const chatHistory = [];
 
 const chat = async (req, res) => {
   const userMessage = req.body.message;
+  const model = req.body.model;
+  const length = req.body.chatHistoryLength;
+
+  console.log(userMessage, model, length);
+  if (length === 0) chatHistory.length = 0;
+  console.log(chatHistory)
 
   // console.log('Alex: ' + userMessage);
 
@@ -13,10 +19,7 @@ const chat = async (req, res) => {
   try {
     const context = chatHistory.map(entry => `You: ${entry.message}\nMushu: ${entry.reply}`).join('\n');
     const prompt = `${context}\nYo  u: ${userMessage}`;
-    console.log('start of prompt')
-    console.log(prompt);
-    console.log('end of prompt')
-    const reply = await generateMushuReply(prompt);
+    const reply = await generateMushuReply(prompt, model);
 
     chatHistory.push({ 
       message: userMessage, 

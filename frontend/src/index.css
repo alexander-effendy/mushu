@@ -10,6 +10,10 @@
   --foreground: 0 0% 100%;
 }
 
+body {
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

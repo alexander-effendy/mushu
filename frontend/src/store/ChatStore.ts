@@ -21,7 +21,7 @@ export const ChatStore = create<ChatState>((set) => ({
 
   chatHistory: [],
   setChatHistory: (history) => set({ chatHistory: history }),
+  
   appendToChatHistory: (newMessage: ChatMessage) =>
     set((state) => ({ chatHistory: [...state.chatHistory, newMessage] })),
-  
 }))

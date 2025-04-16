@@ -6,6 +6,9 @@ type ModelState = {
 }
 
 export const ModelStore = create<ModelState>((set) => ({
-  selectedModel: "mushu",
-  setSelectedModel: (model) => set({ selectedModel: model }),
+  selectedModel: localStorage.getItem('model') || "celine",
+  setSelectedModel: (model) => {
+    localStorage.setItem('model', model);
+    set({ selectedModel: model })
+  },
 }))

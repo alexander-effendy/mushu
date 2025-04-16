@@ -3,32 +3,47 @@ require('dotenv').config();
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
+const {
+  fridge_personality_data,
+} = require('../personality_data/fridge_personality_data');
+
 const { 
   mushu_personality_data, 
   mushu_personality_data_two,
-  wise_personality_data,
-  papa_personality_data,
-  siao_po__personality_data,
-  fridge_personality_data,
-  samantha_personality_data } = require('../personality_data/mushu_personality_data');
+  mushu_personality_data_wise
+} = require('../personality_data/mushu_personality_data');
+
+const { 
+  siao_po__personality_data 
+} = require('../personality_data/siao_po_personality_data');
+
+const { 
+  gemini_personality_data 
+} = require('../personality_data/legacy_personality_data');
+
+const { 
+  samantha_personality_data 
+} = require('../personality_data/samantha_personality_data');
+
+const { 
+  papa_personality_data 
+} = require('../personality_data/papa_personality_data');
 
 const generateMushuReply = async (userMessage, model) => {
   if (!userMessage || userMessage.trim() === "") {
     return null;
   }
 
-  // 🧠 Select the correct personality data
   let personality;
   switch (model) {
     case 'mushu':
       personality = mushu_personality_data;
       break;
     case 'papa':
-      console.log('papa is the best')
       personality = papa_personality_data;
       break;
-    case 'wise':
-      personality = wise_personality_data;
+    case 'mushu-wise':
+      personality = mushu_personality_data_wise;
       break;
     case 'celine':
       personality = siao_po__personality_data;
@@ -39,8 +54,11 @@ const generateMushuReply = async (userMessage, model) => {
     case 'samantha':
       personality = samantha_personality_data;
       break;
+    case 'gemini-2.0-flash':
+      personality = gemini_personality_data;
+      break;
     default:
-      personality = 'You are a friendly chatbot. Keep replies short.';
+      personality = 'You are a friendly chatbot. Keep replies informative.';
   }
   console.log('model used: ' + model);
 

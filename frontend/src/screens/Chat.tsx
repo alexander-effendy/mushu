@@ -1,9 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 // import { useQuery } from "@tanstack/react-query";
+
+import Typewriter from 'typewriter-effect';
+
 import { removeLeadingReply } from '@/utils/Parser';
+// import ReactMarkdown from 'react-markdown';
+// import remarkGfm from 'remark-gfm';
 
 import { ModelStore } from "@/store/ModelStore";
 import { ChatStore } from "@/store/ChatStore";
+import { GeneralStore } from "@/store/GeneralStore";
 
 import ModelCombobox from "@/components/ModelCombobox";
 
@@ -11,23 +17,38 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { sendChatMessageAPI } from '@/api/ChatApi';
+import { formatBotMarkdown } from '@/utils/Formatter';
 
-import { SendHorizontal, Cat, GalleryVerticalEnd } from "lucide-react";
+import { SendHorizontal, Cat, GalleryVerticalEnd, MoonStar, Sun } from "lucide-react";
+import { useMediaQuery } from '@mui/material';
 
 const Chat = () => {
+
+  const isMobile = useMediaQuery('(max-width:700px)');
+
   const selectedModel = ModelStore((state) => state.selectedModel);
   const hasSentFirstMessage = ChatStore((state) => state.hasSentFirstMessage);
   const setHasSentFirstMessage = ChatStore((state) => state.setHasSentFirstMessage);
 
+  const mode = GeneralStore((state) => state.mode);
+  const setMode = GeneralStore((state) => state.setMode);
+
   const chatHistory = ChatStore((state) => state.chatHistory);
   const appendToChatHistory = ChatStore((state) => state.appendToChatHistory);
 
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState<string>("");
+  const [loadingReply, setLoadingReply] = useState<boolean>(false);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-  }, [selectedModel]);
+    const html = document.documentElement;
+      if (mode === 'dark') {
+        html.classList.add('dark');
+      } else {
+        html.classList.remove('dark');
+      }
+  }, [selectedModel, mode]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -35,20 +56,26 @@ const Chat = () => {
 
   const handleSend = async () => {
     if (input.trim() === "") return;
+
     setHasSentFirstMessage(true);
-  
-    appendToChatHistory({ from: "user", text: input});
+    appendToChatHistory({ from: "user", text: input });
     setInput("");
+    setLoadingReply(true);
+
     const chl = chatHistory?.length || 0;
     const response = await sendChatMessageAPI(input, selectedModel, chl);
-    const reply = removeLeadingReply(response);
+    const reply = formatBotMarkdown(removeLeadingReply(response));
 
-    appendToChatHistory({ from: "bot", text: reply});
+    setLoadingReply(false);
+    appendToChatHistory({ from: "bot", text: reply });
   };
 
   return (
     <section className="flex flex-col min-h-screen">
       {/* Absolute icon + combobox */}
+      <Button onClick={() => setMode(mode === 'dark' ? 'light' : 'dark')} size="sm" variant="ghost" className="transition-all transform duration-500 rounded-md absolute right-11 top-2">
+        {mode === 'dark' ? <MoonStar className="text w-6 h-6 shrink-0" /> : <Sun className="text w-6 h-6 shrink-0" />}
+      </Button>
       <Button size="sm" variant="ghost" className="rounded-md absolute right-2 top-2">
         <GalleryVerticalEnd className="text w-6 h-6 shrink-0" />
       </Button>
@@ -65,34 +92,57 @@ const Chat = () => {
               Mushu Inc.
             </div>
             <h1 className="text-3xl font-bold text-primary sm:text-4xl">
-              Welcome to AI Impersonator Meme 101
+              Welcome to Mushu Meow
             </h1>
             <p className="text-muted-foreground max-w-md">
-              {/* Your AI-powered emotional support cat — here to listen, chat, and lift your spirits. */}
-              Your AI-powered diabolical trash talker
+              {/* Your AI-powered personality impostor */}
+              Your AI-powered personality impersonator, here to assist you.
             </p>
           </div>
         )}
 
         {/* CHAT HISTORY */}
         {hasSentFirstMessage && (
-          <div 
-            style={{ height: 'calc(100vh - 125px)' }} // adjust 250px if needed to match input + header height
+          <div
+            style={{ height: isMobile ? 'calc(100vh - 160px)' : 'calc(100vh - 125px)'  }} // adjust 250px if needed to match input + header height
             className="soft-scrollbar-right px-4 py-4 w-full"
           >
             <div className="flex flex-col space-y-2 max-w-xl mx-auto">
-              {chatHistory.map((msg, idx) => (
-                <div
-                  key={idx}
-                  className={`text-sm px-4 py-2 rounded-lg break-words ${
-                    msg.from === "user"
+              {chatHistory.map((msg, idx) => {
+                return (
+                  <div
+                    key={idx}
+                    className={`text-sm px-4 py-2 rounded-lg break-words ${msg.from === "user"
                       ? "max-w-2/3 bg-muted text-muted-foreground self-end"
                       : "max-w-9/10 text-muted-foreground self-start"
-                  }`}
-                >
-                  {msg.text}
-                </div>
-              ))}
+                      }`}
+                  >
+                    {idx === chatHistory.length - 1 && msg.from === 'bot' ? (
+                      <Typewriter
+                        onInit={(typewriter) => {
+                          typewriter
+                            .typeString(msg.text)
+                            .callFunction(() => {
+                              const cursor = document.querySelector('.Typewriter__cursor');
+                              if (cursor) {
+                                (cursor as HTMLElement).style.display = 'none';
+                              }
+                            })
+                            .start();
+                        }}
+                        options={{
+                          delay: 12,
+                          loop: false,
+                        }}
+                      />
+
+                    ) : (
+                      msg.text
+                    )
+                    }
+                  </div>
+                )
+              })}
               <div ref={messagesEndRef} />
             </div>
           </div>

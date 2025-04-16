@@ -21,9 +21,19 @@ import {
 
 const models = [
   {
+    value: "gemini-2.0-flash",
+    label: "Gemini 2.0 Flash",
+    description: "Great for everyday help"
+  },
+  {
     value: "mushu",
     label: "Mushu-v1-mini",
     description: "Sasha's orange cat, scared of Alex"
+  },
+  {
+    value: "mushu-wise",
+    label: "Mushu-v2-wise",
+    description: "The calming cat Mushu, your AI best friend"
   },
   {
     value: "papa",
@@ -50,16 +60,18 @@ const models = [
     label: "David-v1-pro",
     description: "Can climb V9, in his dreams, cooks very well."
   },
-]
+];
 
 export default function ModelCombobox() {
+  const selectedModel = ModelStore((state) => state.selectedModel)
+
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+  const [value, setValue] = React.useState(selectedModel)
 
   const setSelectedModel = ModelStore((state) => state.setSelectedModel)
   const setChatHistory = ChatStore((state) => state.setChatHistory)
   const setHasSentFirstMessage = ChatStore((state) => state.setHasSentFirstMessage)
-
+  
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -78,7 +90,7 @@ export default function ModelCombobox() {
       <PopoverContent className="w-[280px] p-0" side="bottom" align="start">
         <Command>
           <CommandInput placeholder="Search models..." className="h-9 text-[12px]" />
-          <CommandList>
+          <CommandList className="soft-scrollbar-right">
             <CommandEmpty>No framework found.</CommandEmpty>
             <CommandGroup>
             {models.map((framework) => (

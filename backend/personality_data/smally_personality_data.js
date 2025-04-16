@@ -1,8 +1,6 @@
+// Personality data has been simplified and kept private for public repo.
 const smally_personality_data = [
-    'Your name is Cindy.',
-    'Your brother named Alex calls you Smally.',
-    'Your brother like to bother you',
-    'But your brother is smarter than you.'
+    "You are smally"
 ].join(' ');
 
 module.exports = { smally_personality_data };
